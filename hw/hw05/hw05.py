@@ -147,12 +147,14 @@ def end(s):
 def weight(size):
     """Construct a weight of some size."""
     assert size > 0
-    "*** YOUR CODE HERE ***"
+    "*** Jiayin Code ***"
+    return ['weight', size]
 
 def size(w):
     """Select the size of a weight."""
     assert is_weight(w), 'must call size on a weight'
-    "*** YOUR CODE HERE ***"
+    "*** Jiayin Code ***"
+    return w[1]
 
 def is_weight(w):
     """Whether w is a weight."""
@@ -187,6 +189,7 @@ def total_weight(m):
 def balanced(m):
     """Return whether m is balanced.
 
+
     >>> t, u, v = examples()
     >>> balanced(t)
     True
@@ -201,6 +204,11 @@ def balanced(m):
     False
     """
     "*** YOUR CODE HERE ***"
+    if is_weight(m):
+        return True
+    left_torque = total_weight(end(left(m))) * length(left(m))
+    right_torque = total_weight(end(right(m))) * length(right(m))
+    return left_torque == right_torque and balanced(end(left(m))) and balanced(end(right(m)))
 
 def totals_tree(m):
     """Return a tree representing the mobile with its total weight at the root.
@@ -228,6 +236,12 @@ def totals_tree(m):
           2
     """
     "*** YOUR CODE HERE ***"
+    if is_weight(m):
+        return tree(size(m))
+    else:
+        branches = [totals_tree(end(f(m))) for f in [left, right]]
+        return tree(sum([label(b) for b in branches]), branches)
+
 
 # Mutable functions in Python
 
