@@ -27,17 +27,24 @@ class Keyboard:
     """
 
     def __init__(self, *args):
-        "*** YOUR CODE HERE ***"
+        self.buttons = {button.pos: button for button in args}
 
     def press(self, info):
         """Takes in a position of the button pressed, and
         returns that button's output"""
-        "*** YOUR CODE HERE ***"
+        button = self.buttons.get(info)
+        if not button:
+            return ''
+        button.times_pressed += 1
+        return button.key
 
     def typing(self, typing_input):
         """Takes in a list of positions of buttons pressed, and
         returns the total output"""
-        "*** YOUR CODE HERE ***"
+        output = ''
+        for item in typing_input:
+            output += self.press(item)
+        return output
 
 class Button:
     def __init__(self, pos, key):
