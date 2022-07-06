@@ -17,6 +17,14 @@ def acorn_finder(t):
     """
     "*** YOUR CODE HERE ***"
 
+    if label(t) == 'acorn':
+        return True
+    else:
+        for b in branches(t):
+            if acorn_finder(b):
+                return True
+    return False
+
 # Q2
 def prune_leaves(t, vals):
     """Return a modified copy of t with all leaves that have a label
@@ -43,6 +51,14 @@ def prune_leaves(t, vals):
       6
     """
     "*** YOUR CODE HERE ***"
+    if is_leaf(t):
+        if label(t) in vals:
+            return None
+        else:
+            return t
+    else:
+        pruned = [prune_leaves(b, vals) for b in branches(t)]
+        return tree(label(t), [b for b in pruned if b is not None])
 
 # Q3
 def memory(n):
