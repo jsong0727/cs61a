@@ -82,7 +82,26 @@ def make_advanced_counter_maker():
     >>> tom_counter('global-count')
     1
     """
-    "*** YOUR CODE HERE ***"
+    global_count = 0
+    def make_advance_counter():
+        count = 0
+        def counter(msg):
+            nonlocal global_count, count
+            if msg == 'count':
+                count += 1
+                return count
+            elif msg == 'global-count':
+                global_count += 1
+                return global_count
+            elif msg == 'reset':
+                count = 0
+            elif msg == 'global-reset':
+                global_count = 0
+        return counter
+    return make_advance_counter
+
+
+
 
 # Lists
 def trade(first, second):
@@ -113,14 +132,15 @@ def trade(first, second):
     [4, 3, 1, 4, 1]
     """
     m, n = 1, 1
-
-    "*** YOUR CODE HERE ***"
-
-    if False: # change this line!
-        first[:m], second[:n] = second[:n], first[:m]
-        return 'Deal!'
-    else:
-        return 'No deal!'
+    while m < len(first) and n < len(second):
+        if sum(first[:m]) < sum(second[:n]):
+            m += 1
+        elif sum(first[:m]) > sum(second[:n]):
+            n += 1
+        elif sum(first[:m]) == sum(second[:n]):
+            first[:m], second[:n] = second[:n], first[:m]
+            return 'Deal!'
+    return 'No deal!'
 
 # Generators
 
@@ -146,12 +166,12 @@ def permutations(seq):
     >>> sorted(permutations("ab"))
     [['a', 'b'], ['b', 'a']]
     """
-    if ____________________:
-        yield ____________________
+    if not seq:
+        yield []
     else:
-        for perm in _____________________:
-            for _____ in ________________:
-                _________________________
+        for perm in permutations(seq[1:]):
+            for i in range(len(seq)):
+                yield perm[i:] + [seq[0]] + perm[:i]
 
 # Recursive objects
 def make_to_string(front, mid, back, empty_repr):
@@ -169,7 +189,12 @@ def make_to_string(front, mid, back, empty_repr):
     >>> jerrys_to_string(Link.empty)
     '()'
     """
-    "*** YOUR CODE HERE ***"
+    def to_string(lst):
+        if lst is Link.empty:
+            return empty_repr
+        else:
+            return front + str(lst.first) + mid + to_string(lst.rest) + back
+    return to_string
 
 def tree_map(fn, t):
     """Maps the function fn over the entries of t and returns the
@@ -202,7 +227,8 @@ def tree_map(fn, t):
           7
         8
     """
-    "*** YOUR CODE HERE ***"
+    return Tree(fn(t.lable), [tree_map(fn, b) for b in t.branches])
+
 
 def long_paths(tree, n):
     """Return a list of all paths in tree with length at least n.
@@ -233,7 +259,14 @@ def long_paths(tree, n):
     >>> long_paths(whole, 4)
     [Link(0, Link(11, Link(12, Link(13, Link(14)))))]
     """
-    "*** YOUR CODE HERE ***"
+    paths = []
+    if n <= 0 and tree.is_leaf():
+        paths.append(Link(tree.label))
+    for b in tree.branches:
+        for path in long_paths(b, n-1):
+            paths.append(Link(tree.label, path))
+    return paths
+
 
 # Orders of Growth
 def zap(n):
